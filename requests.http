@@ -1,0 +1,85 @@
+@identity = http://localhost:8081
+@vehicles = http://localhost:8080
+@webhookSecret = troque-este-segredo
+
+### Login do administrador
+# @name loginAdmin
+POST {{identity}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@revenda.com",
+  "password": "Revenda2026"
+}
+
+### Login do comprador
+# @name loginComprador
+POST {{identity}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "ana@revenda.com",
+  "password": "Revenda2026"
+}
+
+### Cadastro de veiculo
+# @name cadastroVeiculo
+POST {{vehicles}}/vehicles
+Content-Type: application/json
+Authorization: Bearer {{loginAdmin.response.body.accessToken}}
+
+{
+  "brand": "Volkswagen",
+  "model": "Gol",
+  "year": 2022,
+  "color": "Prata",
+  "price": 55900.00,
+  "licensePlate": "ABC1D23"
+}
+
+### Edicao do veiculo
+PUT {{vehicles}}/vehicles/{{cadastroVeiculo.response.body.id}}
+Content-Type: application/json
+Authorization: Bearer {{loginAdmin.response.body.accessToken}}
+
+{
+  "brand": "Volkswagen",
+  "model": "Gol 1.6",
+  "year": 2023,
+  "color": "Preto",
+  "price": 59900.00,
+  "licensePlate": "ABC1D23"
+}
+
+### Listagem de veiculos a venda, do mais barato para o mais caro
+GET {{vehicles}}/vehicles?status=forSale
+
+### Compra do veiculo
+# @name compra
+POST {{vehicles}}/sales
+Content-Type: application/json
+Authorization: Bearer {{loginComprador.response.body.accessToken}}
+
+{
+  "vehicleId": "{{cadastroVeiculo.response.body.id}}"
+}
+
+### Efetivacao da compra pelo gateway de pagamento
+POST {{vehicles}}/payments/webhook
+Content-Type: application/json
+X-Webhook-Secret: {{webhookSecret}}
+
+{
+  "paymentCode": "{{compra.response.body.paymentCode}}",
+  "status": "approved"
+}
+
+### Listagem de veiculos vendidos, do mais barato para o mais caro
+GET {{vehicles}}/vehicles?status=sold
+
+### Compras do proprio comprador
+GET {{vehicles}}/sales/me
+Authorization: Bearer {{loginComprador.response.body.accessToken}}
+
+### Saude
+GET {{vehicles}}/health
