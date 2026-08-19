@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Revenda.Vehicles.Api/Revenda.Vehicles.Api.csproj" />
+    <Project Path="src/Revenda.Vehicles.Application/Revenda.Vehicles.Application.csproj" />
+    <Project Path="src/Revenda.Vehicles.Domain/Revenda.Vehicles.Domain.csproj" />
+    <Project Path="src/Revenda.Vehicles.Infrastructure/Revenda.Vehicles.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Revenda.Vehicles.IntegrationTests/Revenda.Vehicles.IntegrationTests.csproj" />
+    <Project Path="tests/Revenda.Vehicles.UnitTests/Revenda.Vehicles.UnitTests.csproj" />
+  </Folder>
+</Solution>

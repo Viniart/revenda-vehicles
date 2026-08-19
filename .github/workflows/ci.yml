@@ -1,0 +1,50 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+
+      - name: Restaurar dependencias
+        run: dotnet restore
+
+      - name: Compilar
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Testes unitarios
+        run: >
+          dotnet test tests/Revenda.Vehicles.UnitTests
+          --configuration Release
+          --no-build
+          --logger trx
+          --collect:"XPlat Code Coverage"
+          --results-directory TestResults
+
+      - name: Testes de integracao
+        run: >
+          dotnet test tests/Revenda.Vehicles.IntegrationTests
+          --configuration Release
+          --no-build
+          --logger trx
+          --results-directory TestResults
+
+      - name: Publicar resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults

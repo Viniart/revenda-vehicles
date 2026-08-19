@@ -1,0 +1,44 @@
+name: revenda-vehicles
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: revenda_vehicles
+      POSTGRES_USER: ${POSTGRES_USER:-revenda}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-revenda}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-revenda} -d revenda_vehicles"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    image: ${IMAGE:-revenda-vehicles:local}
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=revenda_vehicles;Username=${POSTGRES_USER:-revenda};Password=${POSTGRES_PASSWORD:-revenda}
+      Jwt__Authority: ${JWT_AUTHORITY:-http://host.docker.internal:8081}
+      Jwt__Issuer: ${JWT_ISSUER:-http://localhost:8081}
+      Jwt__Audience: ${JWT_AUDIENCE:-revenda-vehicles}
+      Jwt__RequireHttpsMetadata: ${JWT_REQUIRE_HTTPS:-false}
+      PaymentWebhook__Secret: ${PAYMENT_WEBHOOK_SECRET:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres-data:
