@@ -17,6 +17,11 @@ RUN dotnet publish src/Revenda.Vehicles.Api/Revenda.Vehicles.Api.csproj \
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 
+# curl serve ao healthcheck do compose; a imagem de runtime nao traz cliente HTTP.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN adduser --disabled-password --gecos "" --uid 5678 revenda
 USER revenda
 
