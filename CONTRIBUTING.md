@@ -121,29 +121,25 @@ Não documentar todo método por obrigação.
   ```
 - Commit pequeno e coeso. Não misturar refatoração com funcionalidade.
 - Descrição de PR: o que muda, por que, como testar. Sem template gigante.
-- **Nunca** incluir trailer de ferramenta (`Co-Authored-By` de assistente,
-  `Generated with ...`) em commit, PR ou changelog.
+- Mensagem de commit sem rodapé automático. `Co-authored-by` apenas quando alguém
+  programou junto de verdade.
 
 ## Estilo do repositório
 
-O projeto é entregue como trabalho autoral e revisado por pessoas. O código e a
-documentação devem ler como escritos por um time, o que na prática significa:
+O que se espera da escrita, no código e na documentação:
 
 - Sem emoji em código, commit, PR, README ou comentário.
-- Sem listas de bullets decorativas com negrito em toda linha; texto corrido quando o
-  assunto é explicação.
-- Sem frases de assistente: "Ótima pergunta", "Vamos mergulhar", "Em resumo, este
-  arquivo...", "Nota importante:".
-- Sem docstring/XML doc em 100% dos membros. Documentação onde agrega, ausente onde não.
-- Sem uniformidade artificial: nem todo arquivo precisa ter o mesmo tamanho, a mesma
-  ordem de seções ou o mesmo número de testes.
-- README escrito com comandos que realmente funcionam, testados antes de commitar.
+- Texto corrido quando o assunto é explicação. Lista só quando os itens são mesmo uma
+  lista, e sem negrito em toda linha.
+- Documentação onde agrega. XML doc em contrato público que aparece no Swagger, não em
+  todo membro por obrigação.
+- README com comandos que realmente funcionam, testados antes de commitar.
 - Sem TODO genérico ("TODO: melhorar isso"). Ou resolve, ou abre issue com contexto.
 
 ## Fluxo esperado ao receber uma tarefa
 
-1. Localize a etapa correspondente em ARQUITETURA.md §8. Se a tarefa não estiver lá e
-   mudar a arquitetura, atualize o documento no mesmo PR.
+1. Entenda onde a mudança encaixa nas camadas. Se ela alterar a arquitetura, explique o
+   porquê na descrição do PR.
 2. Crie a branch a partir da `main` atualizada.
 3. Escreva de dentro para fora: domínio → caso de uso → adaptador de saída → adaptador
    de entrada.
