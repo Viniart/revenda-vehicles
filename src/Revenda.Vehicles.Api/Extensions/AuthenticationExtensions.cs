@@ -17,14 +17,16 @@ public static class AuthenticationExtensions
     {
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-        var authority = configuration["Jwt:Authority"];
-        var audience = configuration["Jwt:Audience"];
-        var issuer = configuration["Jwt:Issuer"] ?? authority;
-
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
+                // Lido aqui dentro, e não no registro do serviço: este delegate só roda quando
+                // as opções são resolvidas, com todas as fontes de configuração já carregadas.
+                var authority = configuration["Jwt:Authority"];
+                var audience = configuration["Jwt:Audience"];
+                var issuer = configuration["Jwt:Issuer"] ?? authority;
+
                 options.Authority = authority;
                 options.Audience = audience;
                 options.MapInboundClaims = false;
