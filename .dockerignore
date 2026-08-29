@@ -1,0 +1,12 @@
+# Artefatos de build da maquina do desenvolvedor. Sem isto, o project.assets.json
+# gerado no host entra na imagem e o publish --no-restore falha ao resolver caminhos
+# de pacote que so existem la fora.
+**/bin/
+**/obj/
+**/TestResults/
+
+**/.git/
+**/.vs/
+**/.idea/
+
+.env
