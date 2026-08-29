@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using Revenda.Vehicles.Api.Security;
 
 namespace Revenda.Vehicles.Api.Extensions;
 
@@ -15,6 +16,8 @@ public static class SwaggerExtensions
                 Version = "v1",
                 Description = "Estoque de veículos, compra e efetivação da venda."
             });
+
+            options.OperationFilter<WebhookSecretHeaderOperationFilter>();
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
