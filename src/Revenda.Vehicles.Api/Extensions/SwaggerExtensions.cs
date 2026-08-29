@@ -5,6 +5,8 @@ namespace Revenda.Vehicles.Api.Extensions;
 
 public static class SwaggerExtensions
 {
+    public const string SecuritySchemeId = "Bearer";
+
     public static IServiceCollection AddVehiclesSwagger(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
@@ -18,8 +20,9 @@ public static class SwaggerExtensions
             });
 
             options.OperationFilter<WebhookSecretHeaderOperationFilter>();
+            options.OperationFilter<AuthenticationRequirementOperationFilter>();
 
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            options.AddSecurityDefinition(SecuritySchemeId, new OpenApiSecurityScheme
             {
                 Name = "Authorization",
                 Type = SecuritySchemeType.Http,
@@ -27,14 +30,6 @@ public static class SwaggerExtensions
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
                 Description = "Token emitido pelo serviço de identidade."
-            });
-
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                [new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                }] = []
             });
         });
 
